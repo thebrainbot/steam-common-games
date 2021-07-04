@@ -1,0 +1,44 @@
+{
+  "name": "steam-common-games",
+  "version": "1.0.0",
+  "build": "",
+  "description": "API service to help find common games with friends",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/thebrainbot/steam-common-games.git",
+    "type": "git"
+  },
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.x"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./build/index.js",
+    "lint": "eslint --no-error-on-unmatched-pattern index.ts 'src/**/*.{js,jsx,ts,tsx}' --cache",
+    "test": "NODE_ENV=test jest --silent"
+  },
+  "dependencies": {
+    "@hapi/accept": "^5.0.2",
+    "@hapi/boom": "^9.1.3",
+    "@hapi/hapi": "^20.1.5",
+    "@hapi/hoek": "^9.2.0",
+    "@types/hapi": "^18.0.5",
+    "@types/node": "^16.0.0",
+    "apollo-server-hapi": "^2.25.2",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "graphsql": "^0.0.0",
+    "jest": "^27.0.6",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.2.3",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5",
+    "webpack": "^5.42.0"
+  },
+  "lint-staged": {
+    "*.js": "eslint --rule 'no-console: error'"
+  }
+}
