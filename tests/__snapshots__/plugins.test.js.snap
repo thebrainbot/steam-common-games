@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Plugins should have known loading phases 1`] = `
+Array [
+  "bootstrap",
+  "main",
+  "tail",
+]
+`;

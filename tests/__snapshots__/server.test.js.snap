@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Server registerPlugins registers plugins 1`] = `
+Array [
+  "graphQL",
+  "graphql",
+  "hapi-swagger",
+]
+`;

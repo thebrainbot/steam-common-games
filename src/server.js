@@ -1,5 +1,7 @@
 const Hapi = require('@hapi/hapi');
 const config = require('config');
+const plugins = require('./plugins');
+
 const pkg = require('../package.json');
 
 const server = new Hapi.Server({
@@ -14,8 +16,6 @@ const server = new Hapi.Server({
   routes: {
     cache: {
       privacy: 'public',
-      // Expiration in 1 minute. Setting this as a default value to push more
-      // careful consideration of caching behaviors.
       expiresIn: config.get('api.http.cache.maxAge'),
     },
     log: {
@@ -30,6 +30,51 @@ const server = new Hapi.Server({
   },
 });
 
+// Register an individual plugin, includes error handling and logging.
+async function registerPlugin(plugin) {
+  const name = plugin.plugin.name || plugin.plugin.pkg.name;
+  const version = plugin.plugin.version || plugin.plugin.pkg.version;
+  try {
+    await server.register(plugin);
+    console.log(` \u2714 registered plugin "${name} v${version}"`);
+  } catch (error) {
+    console.error(`Failed to register plugin "${name} v${version}": ${error}`);
+    throw error;
+  }
+}
+
+// Register a set of plugins associated with a given startup phase.
+const registerPluginSet = async phase => {
+  if (plugins[phase] instanceof Function) {
+    plugins[phase] = plugins[phase]();
+  }
+
+  const pluginsArray = plugins[phase].map(async pluginSet => {
+    if (pluginSet instanceof Function) {
+      pluginSet = pluginSet(server);
+    }
+    if (!Array.isArray(pluginSet)) {
+      pluginSet = [pluginSet];
+    }
+
+    const pluginSetArray = pluginSet.map(async plugin => {
+      await registerPlugin(plugin);
+    });
+    // This requres all plugins in the set to be registered before returning
+    await Promise.all(pluginSetArray);
+  });
+  // This requres all plugins for specified phase to be registered before returning
+  await Promise.all(pluginsArray);
+};
+
+// Register all plugins. The phases are explicit for clarity.
+const registerAllPlugins = async () => {
+  await registerPluginSet('bootstrap');
+
+  await registerPluginSet('main');
+  await registerPluginSet('tail');
+};
+
 /**
  * Starts the server
  * @returns {Promise.<void>}
@@ -41,7 +86,8 @@ const startServer = async () => {
     await server.start();
 
     await console.log(
-      `Service "${config.get('api.name')}" v${pkg.version
+      `Service "${config.get('api.name')}" v${
+        pkg.version
       } started at ${config.get('api.host')}:${config.get(
         'api.port',
       )} with env: ${config.util.getEnv('NODE_ENV')}`,
@@ -62,4 +108,5 @@ const apiCache = server.cache({
 
 module.exports.apiCache = apiCache;
 module.exports.instance = server;
+module.exports.registerAllPlugins = registerAllPlugins;
 module.exports.start = startServer;
