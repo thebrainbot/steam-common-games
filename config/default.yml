@@ -13,3 +13,5 @@ api:
   http:
     cache:
       maxAge: 60000
+secrets:
+  steam_api_url: 'api.steampowered.com' 

@@ -15,7 +15,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./build/index.js",
+    "watch": "nodemon --inspect=0.0.0.0:9222 -r ts-node/register index.ts --exec 'node'",
     "lint": "eslint --no-error-on-unmatched-pattern index.ts 'src/**/*.{js,jsx,ts,tsx}' --cache",
+    "build-ts": "yarn run tsc; yarn run copy-static-assets",
     "test": "NODE_ENV=test jest --silent"
   },
   "dependencies": {
@@ -30,10 +32,14 @@
     "es6-promise": "^4.2.8",
     "eslint": "^7.30.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "graphsql": "^0.0.0",
+    "graphql": "^15.5.1",
+    "graphql-tools": "^7.0.5",
+    "graphql-type-json": "^0.3.2",
+    "graphql-voyager": "^1.0.0-rc.31",
     "jest": "^27.0.6",
     "lint-staged": "^11.0.0",
     "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.9",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.3",
     "ts-loader": "^9.2.3",
