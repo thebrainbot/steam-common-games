@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "12c24df6-ead9-4b1b-8735-61666a5ad3f9",
+		"name": "Steam",
+		"description": "Connect to steam    ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "services",
+			"item": [
+				{
+					"name": "getFriendList graphql",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"",
+									"let steamId = pm.environment.get(\"steamId\");",
+									"let apiKey = pm.variables.get(\"APIKey\");",
+									"",
+									"pm.variables.set('query', ",
+									"  JSON.stringify(`",
+									"query{",
+									"  getFriendList(key: \"${apiKey}\", steamid: \"${steamId}\" ){",
+									"    count",
+									"    players {",
+									"      steamid",
+									"      personaname",
+									"      avatar",
+									"  }",
+									"  }",
+									"}",
+									"`));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"query\": {{query}}}\n"
+						},
+						"url": {
+							"raw": "http://localhost:3773/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3773",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/app/status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3773/app/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3773",
+							"path": [
+								"app",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetFriendList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={{APIKey}}&steamid={{steamId}}&relationship=friend",
+					"protocol": "http",
+					"host": [
+						"api",
+						"steampowered",
+						"com"
+					],
+					"path": [
+						"ISteamUser",
+						"GetFriendList",
+						"v0001",
+						""
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{APIKey}}"
+						},
+						{
+							"key": "steamid",
+							"value": "{{steamId}}"
+						},
+						{
+							"key": "relationship",
+							"value": "friend"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPlayerSummaries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={{APIKey}}&steamids=76561197961197200,76561197963161192",
+					"protocol": "http",
+					"host": [
+						"api",
+						"steampowered",
+						"com"
+					],
+					"path": [
+						"ISteamUser",
+						"GetPlayerSummaries",
+						"v0002",
+						""
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{APIKey}}"
+						},
+						{
+							"key": "steamids",
+							"value": "76561197961197200,76561197963161192"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetOwnedGames",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={{APIKey}}&steamid={{steamId}}&format=json&include_appinfo=true",
+					"protocol": "http",
+					"host": [
+						"api",
+						"steampowered",
+						"com"
+					],
+					"path": [
+						"IPlayerService",
+						"GetOwnedGames",
+						"v0001",
+						""
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{APIKey}}"
+						},
+						{
+							"key": "steamid",
+							"value": "{{steamId}}"
+						},
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "include_appinfo",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Game Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://store.steampowered.com/api/appdetails?appids=218620",
+					"protocol": "https",
+					"host": [
+						"store",
+						"steampowered",
+						"com"
+					],
+					"path": [
+						"api",
+						"appdetails"
+					],
+					"query": [
+						{
+							"key": "appids",
+							"value": "218620"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
