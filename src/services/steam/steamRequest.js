@@ -19,7 +19,7 @@ const config = require('config');
 const requestFriendList = async (steamKey, steamId) => {
   const endpointUrl = config.secrets.steam_api_url;
   const response = await fetch(
-    `${endpointUrl}/ISteamUser/GetFriendList/v001/?steamkey=${steamKey}&steamid=${steamId}&relationship=friend`,
+    `${endpointUrl}/ISteamUser/GetFriendList/v001/?key=${steamKey}&steamid=${steamId}&relationship=friend`,
   );
   if (!response.ok) {
     throw new Error(
@@ -59,9 +59,10 @@ const playerSummariesRequest = async (steamKey, idList) => {
     );
   }
 
-  const jsonData = response.json();
+  const jsonData = await response.json();
   return jsonData.response.players;
 };
+
 /**
  * This gets details for steam friends. The API call can only handle a maximum of 100 steam
  * ids on the request, so we batch the calls if needed and combine to a single list
@@ -70,18 +71,24 @@ const playerSummariesRequest = async (steamKey, idList) => {
  * @param {Array} steamIds List of steam IDs
  * @returns
  */
-const requestPlayerSummaries = (steamKey, steamIds) => {
-  if (!steamIds || steamIds.length === 0) {
-    throw new Error(`Error: No friends returned from Steam`);
-  }
-  const chunkedSteamIds = chunkSteamIds(steamIds);
-  const friendData = [];
+const requestPlayerSummaries = async (steamKey, steamIds) => {
+  try {
+    if (!steamIds || steamIds.length === 0) {
+      throw new Error(`Error: No friends returned from Steam`);
+    }
+    const chunkedSteamIds = chunkSteamIds(steamIds);
+    const friendData = [];
 
-  chunkedSteamIds.forEach(steamids => {
-    const idList = steamids.join(',');
-    friendData.push(playerSummariesRequest(steamKey, idList));
-  });
-  return friendData;
+    for (let i = 0; i < chunkedSteamIds.length; i += 1) {
+      const idList = chunkedSteamIds[i].join(',');
+      // eslint-disable-next-line no-await-in-loop
+      const result = await playerSummariesRequest(steamKey, idList);
+      friendData.push(result);
+    }
+    return friendData.flat();
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**

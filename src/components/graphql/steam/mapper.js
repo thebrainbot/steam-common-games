@@ -4,7 +4,7 @@
  * scheme format.
  */
 
-const mapPlayerSummary = ({
+const mapPlayerSummaryData = ({
   steamid,
   communityvisibilitystate,
   profilestate,
@@ -42,7 +42,11 @@ const mapPlayerSummary = ({
   city: loccityid,
 });
 
-module.exports.playerSummaries = response => ({
+// Returns array of formatted location objects
+const mapPlayerSummary = players =>
+  players.map(result => mapPlayerSummaryData(result));
+
+module.exports.mapPlayerSummariesResults = response => ({
   count: response.length,
   players: mapPlayerSummary(response),
 });

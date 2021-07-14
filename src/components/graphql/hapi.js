@@ -24,10 +24,9 @@ const routes = [
     options: {
       path: '/voyager',
       route: {
-        auth: {
-          mode: 'try',
-        },
+        auth: false,
       },
+      auth: false,
       endpointUrl: '/graphql',
       displayOptions: {
         sortByAlphabet: true,
@@ -62,9 +61,7 @@ plugin.register = async (server, options) => {
   await apolloServer.applyMiddleware({
     app: server,
     route: {
-      auth: {
-        mode: 'try',
-      },
+      auth: false,
     },
   });
   await apolloServer.installSubscriptionHandlers(server.listener);

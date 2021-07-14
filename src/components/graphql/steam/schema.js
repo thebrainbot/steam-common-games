@@ -1,91 +1,83 @@
 /**
  * Scheme for the Steam API.
- * Once settled, removals/name changes should be handled carefully.
+ * Once settled removals/name changes should be handled carefully.
  */
-const schema = `
+const { gql } = require('apollo-server-hapi');
+
+const schema = gql`
   type Query {
-    getFriendList(
-      key: String!,
-      steamid: String!,
-    ): FriendListResult
-    
-    type FriendListResult {
-      steamid: String,
-      relationship: String,
-      friend_since: String
-    }
+    # getPlayerSummaries(key: String!, steamids: [String]): PlayerSummariesResult
+    getFriendList(key: String, steamid: String): PlayerSummariesResult
+    getOwnedGames(key: String!, steamid: String!): OwnedGamesResult
+  }
 
-    getPlayerSummaries(
-      key: String!,
-      steamids: [String],
-    ): PlayerSummariesResult
+  type FriendListResult {
+    steamid: String
+    relationship: String
+    friend_since: String
+  }
 
-    type PlayerSummariesResult {
-      count: Integer,
-      players: [PlayerSummary]
-    }
+  type PlayerSummariesResult {
+    count: Int
+    players: [PlayerSummary]
+  }
 
-    type PlayerSummary {
-      steamid: String,
-      communityvisibilitystate: Integer,
-      profilestate: Integer,
-      personaname: String,
-      profileurl: String,
-      avatar: String,
-      avatarmedium: String,
-      avatarfull: String,
-      avatarhash: String,
-      personastate: Integer,
-      realname: String,
-      primaryclanid: String,
-      timecreated: Integer,
-      personastateflags: Integer,
-      country: String,
-      state: String,
-      city: Integer
-    }
+  type PlayerSummary {
+    steamid: String
+    communityvisibilitystate: Int
+    profilestate: Int
+    personaname: String
+    profileurl: String
+    avatar: String
+    avatarmedium: String
+    avatarfull: String
+    avatarhash: String
+    personastate: Int
+    realname: String
+    primaryclanid: String
+    timecreated: Int
+    personastateflags: Int
+    country: String
+    state: String
+    city: Int
+  }
 
-    getOwnedGames(
-      key: String!,
-      steamid: String!
-    ): OwnedGamesResult
+  type OwnedGamesResult {
+    appid: Int
+    name: String
+    img_icon_url: String
+    img_logo_url: String
+  }
 
-    type OwnedGamesResult {
-      appid: Integer,
-      name: String,
-      img_icon_url: String,
-      img_logo_url: String,
-    }
+  type AppDetails {
+    type: String
+    name: String
+    steam_appid: Int
+    required_age: String
+    is_free: Boolean
+    controller_support: String
+    dlc: [Int]
+    detailed_description: String
+    about_the_game: String
+    short_description: String
+    supported_languages: String
+    header_image: String
+    website: String
+    developers: [String]
+    publishers: [String]
+    categories: [Categories]
+    genres: [Genres]
+  }
 
-    type AppDetails {
-      type: String,
-      name: String,
-      steam_appid: Integer,
-      required_age: String,
-      is_free: Boolean,
-      controller_support: String,
-      dlc: [Integer],
-      detailed_description: String,
-      about_the_game: String,
-      short_description: String,
-      supported_languages: String,
-      header_image: String,
-      website: String,
-      developers: [String],
-      publishers: [String],
-      categories: [Categories],
-      genres: [Genres]
-    }
+  type Categories {
+    id: Int
+    description: String
+  }
 
-    type Categories {
-      id: Integer,
-      description: String
-    }
-
-    type Genres {
-      id: Integer,
-      description: String
-    }
-  }`;
+  type Genres {
+    id: Int
+    description: String
+  }
+`;
 
 module.exports = schema;
