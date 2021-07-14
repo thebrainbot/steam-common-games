@@ -17,8 +17,9 @@
     "start": "node ./build/index.js",
     "watch": "nodemon --inspect=0.0.0.0:9222 --watch src -r ts-node/register index.ts --exec 'node' -L",
     "lint": "eslint --no-error-on-unmatched-pattern index.ts 'src/**/*.{js,jsx,ts,tsx}' --cache",
-    "build-ts": "yarn run tsc",
+    "build": "yarn run tsc",
     "test": "NODE_ENV=test jest --silent",
+    "lab": "lab -v test/*.lab.test.js",
     "prepare": "husky install"
   },
   "dependencies": {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Hapi = require('@hapi/hapi');
 const config = require('config');
 const plugins = require('./plugins');
@@ -75,15 +76,29 @@ const registerAllPlugins = async () => {
 };
 
 /**
+ * Handle server configuration or other pre-start configurations.
+ * Useful for supporting HAPI testing.
+ */
+const serverPrep = async () => {
+  try {
+    console.log('Registering Hapi plugins...');
+    // This should register all plugins before continuing
+    await registerAllPlugins();
+  } catch (error) {
+    console.error(
+      `Error during server prep "${config.get('api.name')} v${pkg.version}": `,
+      error,
+    );
+    process.exit(1);
+  }
+};
+/**
  * Starts the server
  * @returns {Promise.<void>}
  */
 const startServer = async () => {
   try {
-    console.log('Registering Hapi plugins...');
-    // This should register all plugins before continuing
-    await registerAllPlugins();
-
+    await serverPrep();
     // Start the server
     console.log('Starting Hapi server...');
     await server.start();
@@ -104,6 +119,15 @@ const startServer = async () => {
   }
 };
 
+/**
+ * Server init used for testing.
+ */
+const initServer = async () => {
+  await serverPrep();
+  await server.initialize();
+  return server;
+};
+
 const apiCache = server.cache({
   segment: 'apicache',
   expiresIn: 20 * 60 * 1000, // 20 minutes
@@ -113,3 +137,4 @@ module.exports.apiCache = apiCache;
 module.exports.instance = server;
 module.exports.registerAllPlugins = registerAllPlugins;
 module.exports.start = startServer;
+module.exports.testInit = initServer;
