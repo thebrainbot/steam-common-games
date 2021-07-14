@@ -1,9 +1,9 @@
 api:
   name: Steam Common Games Finder
-  host: 0.0.0.0
+  host: 'localhost'
   port: 3773
   debug: true
-  test_mode: 'false'
+  test_mode: 'true'
   base_url: 'http://localhost:3773'
   log:
     json: 'false'

@@ -1,7 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const config = require('config');
 const plugins = require('./plugins');
-
 const pkg = require('../package.json');
 
 const server = new Hapi.Server({
@@ -50,6 +49,7 @@ const registerPluginSet = async phase => {
   }
 
   const pluginsArray = plugins[phase].map(async pluginSet => {
+    console.log('registering plugin', pluginSet);
     if (pluginSet instanceof Function) {
       pluginSet = pluginSet(server);
     }
@@ -69,8 +69,7 @@ const registerPluginSet = async phase => {
 
 // Register all plugins. The phases are explicit for clarity.
 const registerAllPlugins = async () => {
-  await registerPluginSet('bootstrap');
-
+  // await registerPluginSet('bootstrap');
   await registerPluginSet('main');
   await registerPluginSet('tail');
 };
@@ -81,6 +80,10 @@ const registerAllPlugins = async () => {
  */
 const startServer = async () => {
   try {
+    console.log('Registering Hapi plugins...');
+    // This should register all plugins before continuing
+    await registerAllPlugins();
+
     // Start the server
     console.log('Starting Hapi server...');
     await server.start();
