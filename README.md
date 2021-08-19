@@ -1,4 +1,4 @@
-# stream-common-games
+# steam-common-games
 
 Service to find common games among steam friends
 
@@ -11,4 +11,3 @@ It is incredibly annoying that Steam does not have a built in utility to allow u
 ## Steam API Key issues
 
 One major drawback is that Steam requires a TIN in order to properly access their API. Otherwise, a user has to generate their own API key and know their inernal Steam ID (not their usernames). This is definitely a show stopper for a real prodct, but can be worked around for a prototype. Only with a TIN can we get access to an actual Steam login and hopefully better API.
-
